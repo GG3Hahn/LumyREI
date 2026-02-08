@@ -16,6 +16,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
+@REIPluginClient
 public class LumyREI implements REIClientPlugin {
 
     @Override

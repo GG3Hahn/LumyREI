@@ -1,50 +1,26 @@
-# gradle
-
-.gradle/
-build/
-out/
-classes/
-.cache/
-.loom-cache/
-
-# build versioning
-
-build_number.txt
-
 # eclipse
-
+bin
 *.launch
+.settings
+.metadata
 .classpath
 .project
-.settings/
-target/
 
 # idea
-
-.idea/
-*.iml
+out
 *.ipr
 *.iws
+*.iml
+.idea
 
-# vscode
+# gradle
+build
+.gradle
 
-.settings/
-.vscode/
-bin/
-.classpath
-.project
+# other
+eclipse
+run
+runs
+run-data
 
-# macos
-
-*.DS_Store
-
-# fabric
-
-run/
-
-# java
-
-hs_err_*.log
-replay_*.log
-*.hprof
-*.jfr
+repo

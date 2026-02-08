@@ -1,94 +1,84 @@
 plugins {
-    id 'fabric-loom' version '1.10.5'
+    id 'dev.architectury.loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '2.1.21'
 }
 
-def getSequentialModVersion() {
-    def baseVersion = project.mod_version
-    def buildNumberFile = file("build_number.txt")
-    def currentBuildNumber = 0
-
-    if (buildNumberFile.exists()) {
-        try {
-            currentBuildNumber = buildNumberFile.text.trim() as int
-        } catch (Exception e) {
-            logger.warn("Could not read build_number.txt. Starting from 0. Error: ${e.message}")
-            currentBuildNumber = 0
-        }
-    } else {
-        logger.lifecycle("build_number.txt not found. Creating it with build number 0.")
-        buildNumberFile.write("0")
-    }
-
-    currentBuildNumber++
-
-    buildNumberFile.write(currentBuildNumber.toString())
-
-    return "${baseVersion}-${currentBuildNumber}"
-}
-
-version = getSequentialModVersion()
-
-group = project.maven_group
+group = project.mod_group_id
+version = project.mod_version
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = project.mod_name
 }
 
 repositories {
-    mavenCentral()
-    maven { url "https://maven.fabricmc.net/" }
-    maven { url "https://libraries.minecraft.net/" }
+    // Add NeoForged repository.
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
 
-    maven { url "https://maven.shedaniel.me" }
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
+
+    maven { url = "https://maven.shedaniel.me" }
 
     maven {
-        name "Cobblemon"
-        url "https://maven.impactdev.net/repository/development/"
+        name = "Cobblemon"
+        url = "https://maven.impactdev.net/repository/development/"
     }
 }
 
 dependencies {
+    minecraft "net.minecraft:minecraft:$project.minecraft_version"
+    mappings loom.layered {
+        it.mappings("net.fabricmc:yarn:$project.yarn_mappings:v2")
+        it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$project.yarn_mappings_patch_version")
+    }
+    neoForge "net.neoforged:neoforge:$project.neo_version"
 
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "com.cobblemon:fabric:1.7.1+1.21.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.21"
-    modImplementation "net.fabricmc:fabric-language-kotlin:1.13.3+kotlin.2.1.21"
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:16.0.799"
-    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:16.0.799"
+    modImplementation "com.cobblemon:neoforge:1.7.3+1.21.1"
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:16.0.799"
+    modImplementation "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.799"
 }
 
 processResources {
+    inputs.property 'version', project.mod_version
 
-    inputs.property "baseVersion", project.mod_version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": inputs.properties.baseVersion
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand project.properties
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
-}
-
 java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
     withSourcesJar()
 
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-fabricApi {
-    configureDataGeneration()
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
 }
 
-jar {
-    inputs.property "archivesName", project.base.archivesName
+// Configure Maven publishing.
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 
-    from("LICENSE")
-    from("ATTRIBUTION.md")
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
 }
