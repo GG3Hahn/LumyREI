@@ -1,5 +1,6 @@
 package com.lumyverse.lumyrei;
 
+import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.CobblemonRecipeTypes;
 import com.cobblemon.mod.common.client.gui.cookingpot.CookingPotScreen;
 import com.cobblemon.mod.common.item.crafting.CookingPotRecipe;
@@ -11,10 +12,9 @@ import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
+import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import me.shedaniel.rei.forge.REIPluginClient;
 
 @REIPluginClient
 public class LumyREI implements REIClientPlugin {
@@ -26,14 +26,7 @@ public class LumyREI implements REIClientPlugin {
 
         registry.addWorkstations(
                 CookingPotCategory.COOKING_POT,
-                EntryStacks.of(Registries.ITEM.get(Identifier.of("cobblemon", "campfire_pot_red"))) // Icona Workstation
-        );
-
-        registry.add(new BrewingStandCategory()); // Categoria Brewing Stand
-
-        registry.addWorkstations(
-                BrewingStandCategory.BREWING,
-                EntryStacks.of(Items.BREWING_STAND) // Icona Workstation
+                CobblemonItems.INSTANCE.getCampfire_pots().stream().map(EntryStacks::of).toArray(EntryStack<?>[]::new)
         );
     }
 

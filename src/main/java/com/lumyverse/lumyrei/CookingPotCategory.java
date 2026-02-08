@@ -73,7 +73,7 @@ public class CookingPotCategory implements DisplayCategory<CookingPotDisplay> {
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(Registries.ITEM.get(Identifier.of("cobblemon", "campfire_pot_blue")));
+        return EntryStacks.of(Registries.ITEM.get(Identifier.of("cobblemon", "campfire_pot_red")));
     }
 
     @Override

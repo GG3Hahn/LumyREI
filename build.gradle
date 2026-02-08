@@ -41,6 +41,8 @@ dependencies {
 
     modImplementation "com.cobblemon:neoforge:1.7.3+1.21.1"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:16.0.799"
+
+    // needs to be implementation (a.o.t. runtimeOnly) to give us access to REI's DefaultBrewingDisplay
     modImplementation "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.799"
 }
 
