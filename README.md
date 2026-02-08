@@ -1,3 +1,11 @@
+THIS IS A FORK OF LUMYVERSE's [LumyREI](https://github.com/LUMYVERSE/LumyREI) FOR NEOFORGE.
+ANY ISSUES WITH THIS VERSION SHOULD NOT BE DIRECTED AT THEM (USE THIS GITHUB PAGE INSTEAD).
+THE METADATA IN THE MOD BUILDS MAY NOT REFLECT THIS.
+
+Original README below:
+
+---
+
 ![LumyREI - Banner](https://cdn.modrinth.com/data/cached_images/65fabdeccbfd7e80e4b99f98f3706adf7fedc9e8.png)
 ### LumyREI: Cobblemon recipes integrated with REI
 
